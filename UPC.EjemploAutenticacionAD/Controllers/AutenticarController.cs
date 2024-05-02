@@ -11,10 +11,12 @@ namespace UPC.EjemploAutenticacionAD.Controllers;
 public class AutenticarController : Controller
 {
     private readonly IAutenticacionADService _autenticacionADService;
+    private readonly IUsuarioService _usuarioService;
 
-    public AutenticarController(IAutenticacionADService autenticacionADService)
+    public AutenticarController(IAutenticacionADService autenticacionADService, IUsuarioService usuarioService)
     {
         _autenticacionADService = autenticacionADService;
+        _usuarioService = usuarioService;
     }
 
     public IActionResult Login(string? url = null)
@@ -31,6 +33,7 @@ public class AutenticarController : Controller
         Validar(model);
         if (!ModelState.IsValid) return View(model);
 
+
         var consulta = model.ToAutenticacionADConsulta();
         var respuesta = await _autenticacionADService.AutenticarAsync(consulta);
 
@@ -39,6 +42,9 @@ public class AutenticarController : Controller
             model.Mensaje = respuesta.Detalle.AutenticaUsuarios.Observacion;
             return View(model);
         }
+
+        //var usuarioConsulta = model.ToUsuarioConsulta();
+        var usuario = await _usuarioService.BuscarAsync(new("UG", "FVEGA"));
 
         Claim[] claims = new Claim[] { new(ClaimTypes.Name, model.Usuario) };
         var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

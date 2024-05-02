@@ -7,7 +7,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddIdUsuario(this IServiceCollection services)
     {
-        services.AddScoped<IAutenticacionADService, AutenticacionADService>();
+        services.AddScoped<IAutenticacionADService, AutenticacionADService>()
+            .AddScoped<IUsuarioService, UsuarioService>();
         return services;
     }
 }

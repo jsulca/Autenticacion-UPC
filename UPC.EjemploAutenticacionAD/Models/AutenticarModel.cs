@@ -11,5 +11,6 @@ public struct AutenticarModel
         public string? Mensaje { get; set; }
 
         public DTOAutenticacionADConsulta ToAutenticacionADConsulta() => new(Usuario, Clave);
+        public DTOUsuarioConsulta ToUsuarioConsulta() => new("UG", Usuario);
     }
 }
